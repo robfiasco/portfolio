@@ -1942,6 +1942,242 @@
                 padding-top: max(env(safe-area-inset-top), 12px);
             }
         }
+
+        /* --- Dynamic Weather Styles --- */
+        :root {
+            --wx-sunny-bg: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            /* Clear Blue Sky */
+            --wx-night-bg: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            /* Deep Night */
+            --wx-cloudy-bg: linear-gradient(135deg, #64748b 0%, #475569 100%);
+            /* Overcast Grey */
+            --wx-rain-bg: linear-gradient(135deg, #334155 0%, #1e293b 100%);
+            /* Dark Rain */
+            --wx-snow-bg: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+            /* Cold Grey */
+            --wx-thunder-bg: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+            /* Stormy Purple */
+        }
+
+        /* Modal Overrides based on data-weather attribute */
+        .modal-window[data-weather="sunny"] .window-chrome,
+        .modal-window[data-weather="sunny"] .modal-content {
+            background: var(--wx-sunny-bg);
+            color: white;
+        }
+
+        .modal-window[data-weather="partly"] .window-chrome,
+        .modal-window[data-weather="partly"] .modal-content {
+            background: var(--wx-sunny-bg);
+            color: white;
+        }
+
+        .modal-window[data-weather="night"] .window-chrome,
+        .modal-window[data-weather="night"] .modal-content {
+            background: var(--wx-night-bg);
+            color: white;
+        }
+
+        .modal-window[data-weather="cloudy"] .window-chrome,
+        .modal-window[data-weather="cloudy"] .modal-content {
+            background: var(--wx-cloudy-bg);
+            color: white;
+        }
+
+        .modal-window[data-weather="rain"] .window-chrome,
+        .modal-window[data-weather="rain"] .modal-content {
+            background: var(--wx-rain-bg);
+            color: white;
+        }
+
+        .modal-window[data-weather="snow"] .window-chrome,
+        .modal-window[data-weather="snow"] .modal-content {
+            background: var(--wx-snow-bg);
+            color: white;
+        }
+
+        .modal-window[data-weather="thunder"] .window-chrome,
+        .modal-window[data-weather="thunder"] .modal-content {
+            background: var(--wx-thunder-bg);
+            color: white;
+        }
+
+        /* fix chrome borders when themed */
+        .modal-window[data-weather] .window-chrome {
+            border-bottom-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-window[data-weather] .modal-footer {
+            background: rgba(0, 0, 0, 0.2);
+            border-top-color: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .modal-window[data-weather] .window-title {
+            color: white;
+        }
+
+        .modal-window[data-weather] .window-controls button {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Weather Card Layout */
+        .weather-card {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            text-align: center;
+            padding-top: 10px;
+        }
+
+        .weather-main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .weather-main-temp {
+            font-size: 48px;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            line-height: 1;
+        }
+
+        .weather-main-condition {
+            font-size: 16px;
+            font-weight: 500;
+            opacity: 0.9;
+            text-transform: capitalize;
+        }
+
+        .weather-main-icon {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 8px;
+        }
+
+        .weather-main-icon svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .weather-forecast {
+            display: flex;
+            justify-content: space-between;
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            padding: 12px 16px;
+        }
+
+        .forecast-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+        }
+
+        .forecast-time {
+            opacity: 0.7;
+        }
+
+        .forecast-temp {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .forecast-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Animations */
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes pulse-flash {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.6;
+            }
+        }
+
+        @keyframes drift {
+            0% {
+                transform: translateX(0);
+            }
+
+            50% {
+                transform: translateX(4px);
+            }
+
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes rain-drop {
+            0% {
+                transform: translateY(0);
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(10px);
+                opacity: 0;
+            }
+        }
+
+        .weather-anim.weather-sunny .sun-core {
+            animation: pulse-flash 3s ease-in-out infinite;
+        }
+
+        .weather-anim.weather-sunny path {
+            animation: spin 12s linear infinite;
+            transform-origin: center;
+        }
+
+        .weather-anim.weather-partly .sun-core {
+            animation: pulse-flash 3s ease-in-out infinite;
+        }
+
+        .weather-anim.weather-rain .drop {
+            animation: rain-drop 1s linear infinite;
+        }
+
+        .weather-anim.weather-rain .drop:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .weather-anim.weather-rain .drop:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        .weather-anim.weather-snow .flake {
+            animation: drift 3s ease-in-out infinite;
+        }
+
+        .weather-anim.weather-snow .flake:nth-child(2) {
+            animation-delay: 1s;
+        }
+
+        .weather-anim.weather-thunder .bolt {
+            animation: pulse-flash 0.5s ease-in-out infinite;
+        }
     </style>
 </head>
 
@@ -2845,81 +3081,95 @@ focus: AI-native product building</pre>
             return `${mins}m ago`;
         }
 
-        // Fetch current weather from Open-Meteo and cache for 15 minutes.
-        async function updateWeather() {
-            const textEl = document.getElementById('wxText');
-            const iconEl = document.getElementById('wxIcon');
-            if (!textEl || !iconEl) return;
-            const cacheKey = 'weather_cache';
-            const cacheRaw = localStorage.getItem(cacheKey);
-            const now = Date.now();
-            if (cacheRaw) {
-                try {
-                    const cached = JSON.parse(cacheRaw);
-                    if (cached && cached.timestamp && now - cached.timestamp < 15 * 60 * 1000) {
-                        lastWeatherData = cached;
-                        if (cached.temp !== null && cached.temp !== undefined) {
-                            textEl.textContent = `Jamestown ${cached.temp}° · ${cached.condition || '—'}`;
-                        } else {
-                            textEl.textContent = 'Jamestown —';
-                        }
-                        iconEl.innerHTML = renderWeatherIcon(cached.type || 'cloudy');
-                        iconEl.title = `Jamestown: ${cached.temp ?? '—'}°${cached.condition ? ` • ${cached.condition}` : ''} (updated ${formatUpdatedAgo(cached.timestamp)})`;
-                        return;
-                    }
-                } catch (e) {
-
+// Fetch current weather from Open-Meteo and cache for 15 minutes.
+async function updateWeather() {
+    const textEl = document.getElementById('wxText');
+    const iconEl = document.getElementById('wxIcon');
+    if (!textEl || !iconEl) return;
+    const cacheKey = 'weather_cache';
+    const cacheRaw = localStorage.getItem(cacheKey);
+    const now = Date.now();
+    if (cacheRaw) {
+        try {
+            const cached = JSON.parse(cacheRaw);
+            if (cached && cached.timestamp && now - cached.timestamp < 15 * 60 * 1000) {
+                lastWeatherData = cached;
+                if (cached.temp !== null && cached.temp !== undefined) {
+                    textEl.textContent = `Jamestown ${cached.temp}° · ${cached.condition || '—'}`;
+                } else {
+                    textEl.textContent = 'Jamestown —';
                 }
+                iconEl.innerHTML = renderWeatherIcon(cached.type || 'cloudy');
+                iconEl.title = `Jamestown: ${cached.temp ?? '—'}°${cached.condition ? ` • ${cached.condition}` : ''} (updated ${formatUpdatedAgo(cached.timestamp)})`;
+                return;
             }
+        } catch (e) {
 
-            try {
-                const lat = 42.0970;
-                const lon = -79.2353;
-                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weathercode&hourly=temperature_2m,weathercode&temperature_unit=fahrenheit`;
-                const response = await fetch(url);
-                if (!response.ok) throw new Error('Weather fetch failed');
-                const data = await response.json();
-                const current = data.current || {};
-                const temp = typeof current.temperature_2m === 'number' ? Math.round(current.temperature_2m) : null;
-                const condition = weatherCodeToLabel(current.weathercode);
-                const type = weatherCodeToType(current.weathercode);
-                const text = temp !== null ? `Jamestown ${temp}° · ${condition}` : 'Jamestown —';
+        }
+    }
 
-                const hourly = data.hourly || {};
-                const forecast = [];
-                if (Array.isArray(hourly.time) && Array.isArray(hourly.temperature_2m)) {
-                    const nowIndex = hourly.time.findIndex((t) => new Date(t).getTime() >= now);
-                    for (let i = 0; i < 3; i++) {
-                        const idx = Math.max(0, nowIndex) + i;
-                        if (hourly.time[idx]) {
-                            const hour = new Date(hourly.time[idx]).getHours().toString().padStart(2, '0');
-                            const t = Math.round(hourly.temperature_2m[idx]);
-                            const code = hourly.weathercode ? hourly.weathercode[idx] : null;
-                            forecast.push({ hour, temp: t, condition: weatherCodeToLabel(code) });
-                        }
-                    }
+    try {
+        const lat = 42.0970;
+        const lon = -79.2353;
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weathercode&hourly=temperature_2m,weathercode&temperature_unit=fahrenheit`;
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Weather fetch failed');
+        const data = await response.json();
+        const current = data.current || {};
+        const temp = typeof current.temperature_2m === 'number' ? Math.round(current.temperature_2m) : null;
+        const condition = weatherCodeToLabel(current.weathercode);
+        const type = weatherCodeToType(current.weathercode);
+
+        // Determine theme based on type and time of day
+        let theme = type;
+        const hour = new Date().getHours();
+        const isNight = hour >= 20 || hour < 6; // 8PM - 6AM
+
+        if (isNight && (type === 'sunny' || type === 'partly' || type === 'cloudy')) {
+            theme = 'night';
+        }
+
+        const text = temp !== null ? `Jamestown ${temp}° · ${condition}` : 'Jamestown —';
+
+        const hourly = data.hourly || {};
+        const forecast = [];
+        if (Array.isArray(hourly.time) && Array.isArray(hourly.temperature_2m)) {
+            const nowIndex = hourly.time.findIndex((t) => new Date(t).getTime() >= now);
+            for (let i = 0; i < 3; i++) {
+                const idx = Math.max(0, nowIndex) + i + 1; // Start from next hour
+                // Ensure we don't go out of bounds
+                if (hourly.time[idx]) {
+                    const hDate = new Date(hourly.time[idx]);
+                    const hourStr = hDate.getHours().toString().padStart(2, '0');
+                    const t = Math.round(hourly.temperature_2m[idx]);
+                    const code = hourly.weathercode ? hourly.weathercode[idx] : null;
+                    forecast.push({ hour: hourStr, temp: t, code: code });
                 }
-
-                lastWeatherData = {
-                    text,
-                    temp,
-                    condition,
-                    type,
-                    timestamp: now,
-                    forecast
-                };
-
-                textEl.textContent = text;
-                iconEl.innerHTML = renderWeatherIcon(type);
-                iconEl.title = `Jamestown: ${temp ?? '—'}°${condition ? ` • ${condition}` : ''} (updated ${formatUpdatedAgo(now)})`;
-                localStorage.setItem(cacheKey, JSON.stringify(lastWeatherData));
-            } catch (e) {
-                lastWeatherData = null;
-                textEl.textContent = 'Jamestown —';
-                iconEl.innerHTML = renderWeatherIcon('neutral');
-                iconEl.title = 'Weather unavailable';
             }
         }
+
+        lastWeatherData = {
+            text,
+            temp,
+            condition,
+            type,
+            theme,
+            timestamp: now,
+            forecast
+        };
+
+        textEl.textContent = text;
+        iconEl.innerHTML = renderWeatherIcon(type);
+        iconEl.title = `Jamestown: ${temp ?? '—'}°${condition ? ` • ${condition}` : ''} (updated ${formatUpdatedAgo(now)})`;
+        localStorage.setItem(cacheKey, JSON.stringify(lastWeatherData));
+    } catch (e) {
+        lastWeatherData = null;
+        textEl.textContent = 'Jamestown —';
+        iconEl.innerHTML = renderWeatherIcon('neutral');
+        iconEl.title = 'Weather unavailable';
+        console.error(e);
+    }
+}
 
 
         function createIcons() {
@@ -3247,27 +3497,47 @@ focus: AI-native product building</pre>
             });
         }
 
-        function getWeatherContent() {
-            if (!lastWeatherData) {
-                return `
+function getWeatherContent() {
+    if (!lastWeatherData) {
+        return `
                     <div class="content-section">
-                        <p>Weather unavailable.</p>
+                        <p style="opacity: 0.7;">Acquiring weather signal...</p>
                     </div>
                 `;
-            }
-            const forecastLines = (lastWeatherData.forecast || []).map((entry) => {
-                return `<div>${entry.hour}:00 — ${entry.temp}°F • ${entry.condition}</div>`;
-            }).join('');
-            return `
-                <div class="content-section">
-                    <p><strong>Jamestown, NY</strong></p>
-                    <p>${lastWeatherData.temp ?? '—'}°F • ${lastWeatherData.condition}</p>
-                    <div class="about-log" style="margin-top: 12px;">
-                        ${forecastLines || 'Forecast unavailable.'}
+    }
+
+    const iconHtml = renderWeatherIcon(lastWeatherData.type);
+    const condition = lastWeatherData.condition || 'Unknown';
+    const temp = lastWeatherData.temp ?? '--';
+
+    const forecastItems = (lastWeatherData.forecast || []).map(f => {
+        const codeType = weatherCodeToType(f.code);
+        let miniIcon = renderWeatherIcon(codeType).replace('class="weather-icon', 'class="forecast-icon');
+
+        return `
+                <div class="forecast-item">
+                    <span class="forecast-time">${f.hour}:00</span>
+                    ${miniIcon}
+                    <span class="forecast-temp">${f.temp}°</span>
+                </div>
+            `}).join('');
+
+    return `
+                <div class="weather-card">
+                    <div class="weather-main">
+                        <div class="weather-main-icon">${iconHtml}</div>
+                        <div class="weather-main-temp">${temp}°</div>
+                        <div class="weather-main-condition">${condition}</div>
                     </div>
+                
+                    <div class="weather-forecast">
+                        ${forecastItems || '<div style="font-size:12px;opacity:0.7;width:100%;text-align:center">Forecast unavailable</div>'}
+                    </div>
+
+                    <p style="font-size: 11px; opacity: 0.5; margin-top: 10px;">Jamestown, NY • Updated ${formatUpdatedAgo(lastWeatherData.timestamp)}</p>
                 </div>
             `;
-        }
+}
 
         function initSelectionBox() {
             const selection = document.getElementById('selectionBox');
