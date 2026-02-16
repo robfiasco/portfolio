@@ -491,27 +491,107 @@
             z-index: 1;
         }
 
-        /* Dock is fixed with visible overflow to avoid hover clipping. */
+        /* Updated grids for left/right split */
+        /* Build Archive Grid */
+        .build-archive-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 10px 0;
+        }
+
+        .archive-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+            text-decoration: none;
+            display: block;
+        }
+
+        .archive-card:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .archive-thumb {
+            width: 100%;
+            height: 140px;
+            background: #1a1a1a;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .archive-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .archive-card:hover .archive-thumb img {
+            transform: scale(1.05);
+        }
+
+        .archive-info {
+            padding: 16px;
+        }
+
+        .archive-info h4 {
+            margin: 0 0 6px 0;
+            font-size: 15px;
+            color: var(--ink);
+            font-weight: 600;
+        }
+
+        .archive-info p {
+            margin: 0;
+            font-size: 13px;
+            color: var(--ink-soft);
+            line-height: 1.4;
+        }
+
+        /* Light mode overrides */
+        [data-theme="light"] .archive-card {
+            background: rgba(0, 0, 0, 0.02);
+            border-color: rgba(0, 0, 0, 0.06);
+        }
+
+        [data-theme="light"] .archive-card:hover {
+            background: rgba(0, 0, 0, 0.04);
+            border-color: rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+        }
+
         .icon-grid {
             position: fixed;
             top: 50px;
-            left: 18px;
             padding: 8px 10px;
             display: grid;
-            grid-template-columns: repeat(1, 92px);
+            grid-template-columns: 92px !important;
+            grid-auto-flow: row;
+            width: 112px;
             grid-auto-rows: clamp(52px, 6.2vh, 64px);
             gap: 22px;
             z-index: 2;
             overflow: visible;
         }
 
+        .icon-grid.left {
+            left: 18px;
+        }
+
+        .icon-grid.right {
+            left: 154px;
+            right: auto;
+        }
+
         @media (max-height: 760px) {
-            .icon-grid {
-                grid-template-columns: repeat(2, 92px);
-                column-gap: clamp(8px, 2vw, 14px);
-                grid-auto-rows: clamp(48px, 5.8vh, 60px);
-                gap: 22px;
-            }
+            /* Removed 2-column auto-flow as we are manually splitting columns now */
         }
 
         .icon-separator {
@@ -814,6 +894,15 @@
                 display: flex;
                 flex-direction: column;
                 gap: 18px;
+                /* Reset right grid specific behavior on smaller screens */
+                justify-items: start;
+                right: auto;
+                left: auto;
+            }
+
+            .icon-grid.right {
+                margin-top: 18px;
+                /* Add sapcing between the two grids when stacked */
             }
 
             .desktop-icon {
@@ -1902,7 +1991,8 @@
         </header>
 
         <div class="desktop">
-            <div class="icon-grid" id="iconGrid"></div>
+            <div class="icon-grid left" id="iconGridLeft"></div>
+            <div class="icon-grid right" id="iconGridRight"></div>
         </div>
 
         <div class="helper-tip" id="helperTip">
@@ -2000,6 +2090,8 @@
                 content: 'about',
                 icon: 'profile',
                 accent: '#22d3ee',
+                previewImg: './assets/previews/about.png',
+                previewUrl: 'about', // Added to trigger preview logic
                 description: 'About.txt — background, focus areas, and systems shipped. Open to read.'
             },
             {
@@ -2008,6 +2100,7 @@
                 type: 'external',
                 url: 'https://radio.chadakoindigital.com',
                 previewUrl: 'https://radio.chadakoindigital.com',
+                previewImg: './assets/previews/cdir.png',
                 icon: 'radio',
                 accent: '#2dd4bf',
                 description: 'CDIR — living radio system + automation pipeline. Opens in a new tab.'
@@ -2018,6 +2111,7 @@
                 type: 'external',
                 url: 'https://lotdqq.com',
                 previewUrl: 'https://lotdqq.com',
+                previewImg: './assets/previews/lotdqq.png',
                 icon: 'quiz',
                 accent: '#8b5cf6',
                 description: 'LOTDQQ — shipped trivia app. Opens in a new tab.'
@@ -2029,6 +2123,8 @@
                 content: 'good-budget',
                 icon: 'budget',
                 accent: '#22c55e',
+                previewImg: './assets/previews/good-budget.png',
+                previewUrl: 'good-budget',
                 description: 'Good Budget — practical budget prototype. Open for details.'
             },
             {
@@ -2042,6 +2138,8 @@
                 content: 'microlifts',
                 icon: 'dumbbell',
                 accent: '#3b82f6',
+                previewImg: './assets/previews/microlifts.png',
+                previewUrl: 'microlifts',
                 description: 'MicroLifts — iOS strength tracker (SwiftUI). Open for screenshots + details.'
             },
             {
@@ -2051,6 +2149,8 @@
                 content: 'case-studies',
                 icon: 'docs',
                 accent: '#f59e0b',
+                previewImg: './assets/previews/case-studies.png',
+                previewUrl: 'case-studies',
                 description: 'Case Studies — deep dives into selected builds. Open for details.'
             },
             {
@@ -2060,6 +2160,8 @@
                 content: 'build-archive',
                 icon: 'flask',
                 accent: '#7c3aed',
+                previewImg: './assets/previews/build-archive.png',
+                previewUrl: 'build-archive',
                 description: 'Build Archive — experiments and shipped builds. Open for the list.'
             },
             {
@@ -2073,19 +2175,12 @@
                 content: 'contact',
                 icon: 'chat',
                 accent: '#6366f1',
-                description: 'Contact — email + phone. Open to copy details.'
+                previewImg: './assets/previews/contact.png',
+                previewUrl: 'contact', // Added to trigger preview logic
+                description: 'Contact — email. Open to view.'
             },
             {
-                id: 'resume',
-                label: 'Resume.pdf',
-                type: 'external',
-                url: './resume.pdf',
-                icon: 'doc',
-                accent: '#94a3b8',
-                description: 'Resume.pdf — download PDF. Opens in a new tab.'
-            },
-            {
-                id: 'sep-3',
+                id: 'system-log',
                 type: 'separator'
             },
             {
@@ -2094,8 +2189,10 @@
                 type: 'modal',
                 content: 'system-log',
                 icon: 'terminal',
-                accent: '#22c55e',
-                description: 'System.log — build updates + timeline. Open for the log.'
+                accent: '#10b981',
+                previewImg: './assets/previews/system-log.png',
+                previewUrl: 'system-log', // Added to trigger preview logic
+                description: 'System.log — recent activity and updates. Open to view.'
             }
         ];
 
@@ -2478,9 +2575,9 @@ focus: AI-native product building</pre>
             const card = document.getElementById('previewCard');
             const title = document.getElementById('previewTitle');
             const media = document.getElementById('previewMedia');
-            const image = document.getElementById('previewImage');
             const openBtn = document.getElementById('previewOpen');
             const openNewBtn = document.getElementById('previewOpenNew');
+            const image = document.getElementById('previewImage');
             if (!card || !title || !media || !image || !openBtn || !openNewBtn) return;
             if (window.matchMedia('(max-width: 768px)').matches) return;
 
@@ -2519,29 +2616,48 @@ focus: AI-native product building</pre>
 
             const show = (icon) => {
                 const previewTitle = icon.getAttribute('data-preview-title');
+                const previewImg = icon.getAttribute('data-preview-img');
                 const previewUrl = icon.getAttribute('data-preview-url');
-                if (!previewTitle || !previewUrl) return;
+                const type = icon.getAttribute('data-type');
+
+                if (!previewTitle) return;
                 activeIcon = icon;
                 title.textContent = previewTitle;
                 media.classList.remove('loaded', 'error');
-                const cached = getCachedThumb(previewUrl);
-                if (cached && cached.status === 'loaded' && cached.src) {
-                    image.src = cached.src;
-                    media.classList.add('loaded');
-                } else if (cached && cached.status === 'error') {
-                    media.classList.add('error');
+
+                // Toggle "Open in new tab" button
+                if (type === 'external') {
+                    openNewBtn.style.cssText = 'display: flex !important;';
                 } else {
-                    image.removeAttribute('src');
-                    loadThumb(previewUrl).then((result) => {
-                        setThumbCache(previewUrl, result);
-                        if (activeIcon !== icon) return;
-                        if (result.status === 'loaded' && result.src) {
-                            image.src = result.src;
-                            media.classList.add('loaded');
-                        } else {
-                            media.classList.add('error');
-                        }
-                    });
+                    openNewBtn.style.cssText = 'display: none !important;';
+                }
+
+                // Prioritize local preview image if available
+                if (previewImg) {
+                    image.src = previewImg;
+                    media.classList.add('loaded');
+                } else {
+                    const cached = getCachedThumb(previewUrl);
+                    if (cached && cached.status === 'loaded' && cached.src) {
+                        image.src = cached.src;
+                        media.classList.add('loaded');
+                    } else if (cached && cached.status === 'error') {
+                        media.classList.add('error');
+                    } else if (previewUrl) {
+                        image.removeAttribute('src');
+                        loadThumb(previewUrl).then((result) => {
+                            setThumbCache(previewUrl, result);
+                            if (activeIcon !== icon) return;
+                            if (result.status === 'loaded' && result.src) {
+                                image.src = result.src;
+                                media.classList.add('loaded');
+                            } else {
+                                media.classList.add('error');
+                            }
+                        });
+                    } else {
+                        media.classList.add('error');
+                    }
                 }
                 openBtn.onclick = () => {
                     const index = icon.getAttribute('data-index');
@@ -2807,7 +2923,9 @@ focus: AI-native product building</pre>
 
 
         function createIcons() {
-            const grid = document.getElementById('iconGrid');
+            const gridLeft = document.getElementById('iconGridLeft');
+            const gridRight = document.getElementById('iconGridRight');
+
             icons.forEach((icon, index) => {
                 if (icon.type === 'separator') {
                     return;
@@ -2821,14 +2939,23 @@ focus: AI-native product building</pre>
                 button.setAttribute('aria-label', icon.label);
                 button.setAttribute('data-id', icon.id);
                 button.style.setProperty('--app-accent', icon.accent || 'var(--ink)');
-                if (icon.id === 'cdir') {
-                    button.setAttribute('data-preview-title', 'CDIR');
-                    button.setAttribute('data-preview-url', icon.previewUrl || icon.url);
+
+                // Add preview data attributes
+                if (icon.previewUrl) {
+                    button.setAttribute('data-preview-url', icon.previewUrl);
                 }
-                if (icon.id === 'lotdqq') {
-                    button.setAttribute('data-preview-title', 'LOTDQQ');
-                    button.setAttribute('data-preview-url', icon.previewUrl || icon.url);
+                if (icon.previewImg) {
+                    button.setAttribute('data-preview-img', icon.previewImg);
                 }
+
+                // Set preview title if preview data exists
+                if (icon.previewUrl || icon.previewImg) {
+                    button.setAttribute('data-preview-title', icon.label);
+                }
+
+                // Internal/External type for preview logic
+                button.setAttribute('data-type', icon.type);
+
                 button.innerHTML = `
                     <span class="icon-glyph">
                         <svg class="icon-svg" viewBox="0 0 24 24">
@@ -2858,7 +2985,13 @@ focus: AI-native product building</pre>
                 button.addEventListener('mouseleave', resetStatus);
                 button.addEventListener('focus', () => setStatus(icon.description, { announce: false }));
                 button.addEventListener('blur', resetStatus);
-                grid.appendChild(button);
+
+                // Split logic: first 7 icons go left, rest go right
+                if (index < 8) {
+                    gridLeft.appendChild(button);
+                } else {
+                    gridRight.appendChild(button);
+                }
             });
         }
 
@@ -2939,6 +3072,11 @@ focus: AI-native product building</pre>
             }
 
             if (contentType === 'system-log') {
+                // Trigger dynamic updates
+                if (typeof fetchGitHubUpdates === 'function') {
+                    fetchGitHubUpdates();
+                }
+
                 const timeInterval = setInterval(() => {
                     const timeEl = document.getElementById('timeOnPage');
                     if (timeEl) {
@@ -3238,21 +3376,41 @@ focus: AI-native product building</pre>
 
         function getBuildArchiveContent() {
             return `
-                <div class="case-study-list">
-                    <div class="case-study-item build-archive-item" data-url="https://tarpskunks.netlify.app/">
+        <div class="content-section">
+            <p style="margin-bottom: 24px;">A collection of experiments, side projects, and shipped apps.</p>
+            <div class="build-archive-grid">
+                <a href="https://tarpskunks.netlify.app/" target="_blank" rel="noopener noreferrer" class="archive-card">
+                    <div class="archive-thumb">
+                        <img src="./assets/previews/tarpskunks.png" alt="Tarp Skunks" loading="lazy">
+                    </div>
+                    <div class="archive-info">
                         <h4>Tarp Skunks Website</h4>
                         <p>Local baseball team site with schedule, fan info, and clean UI.</p>
                     </div>
-                    <div class="case-study-item build-archive-item" data-url="https://focus-slayer.netlify.app/">
+                </a>
+                
+                <a href="https://focus-slayer.netlify.app/" target="_blank" rel="noopener noreferrer" class="archive-card">
+                    <div class="archive-thumb">
+                        <img src="./assets/previews/focusslayer.png" alt="Focus Slayer" loading="lazy">
+                    </div>
+                    <div class="archive-info">
                         <h4>Focus Slayer</h4>
                         <p>ADHD-friendly focus and productivity tool with minimal interface.</p>
                     </div>
-                    <div class="case-study-item build-archive-item" data-url="https://binanceus-solana.netlify.app/">
+                </a>
+
+                <a href="https://binanceus-solana.netlify.app/" target="_blank" rel="noopener noreferrer" class="archive-card">
+                    <div class="archive-thumb">
+                        <img src="./assets/previews/binance-solana.png" alt="Binance.US Solana" loading="lazy">
+                    </div>
+                    <div class="archive-info">
                         <h4>Binance.US Solana Dashboard</h4>
                         <p>Custom dashboard for tracking Solana assets and market data.</p>
                     </div>
-                </div>
-            `;
+                </a>
+            </div>
+        </div>
+    `;
         }
 
         function showCaseStudyDetail(index) {
@@ -3376,38 +3534,42 @@ focus: AI-native product building</pre>
         function getContactContent() {
             return `
                 <div class="content-section">
-                    <p>Open to roles and collaborations where fast iterations and clean systems matter.</p>
+                    <p style="font-weight: 600; margin-bottom: 12px;">Open to roles, collaborations, and interesting problems.</p>
+                    <p>I build real tools fast — web apps, dashboards, automation, and weird useful things — with a focus on clean, secure systems that actually work.</p>
+                    <p>I use modern AI coding tools to turn my ideas into working products quickly, test them in the real world, and keep improving them.</p>
+                    <p>I like fast iterations, clear thinking, and shipping things people actually use instead of letting them sit in meetings.</p>
+                    <p>If you’re building something smart and need someone who can move quickly and bring ideas to life, we’ll get along.</p>
                 </div>
-                <div class="content-section">
-                    <h3>Email</h3>
-                    <div class="contact-links text-lg">rf78519@protonmail.com</div>
-                    <button class="copy-button" id="copyEmailBtn" data-copy="rf78519@protonmail.com">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <rect x="9" y="9" width="13" height="13" rx="2" stroke-width="2"/>
-                            <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" stroke-width="2"/>
-                        </svg>
-                        Copy email
-                    </button>
+                
+                <div class="content-section" style="margin-top: 24px;">
+                    <h3>Best way to reach me:</h3>
+                    <p style="font-size: 12px; color: var(--muted); margin-bottom: 8px;">Click to reveal email ↓</p>
+                    <div id="emailContainer">
+                        <button class="copy-button" onclick="revealEmail(this)">
+                            Reveal Email
+                        </button>
+                    </div>
                 </div>
-                <div class="content-section">
-                    <h3>Phone</h3>
-                    <div class="contact-links text-lg">281-785-7760</div>
-                    <p style="color: var(--ink-soft); margin-top: 4px; font-size: 12px;">Text is the best way to set up a call.</p>
-                    <button class="copy-button" id="copyPhoneBtn" data-copy="281-785-7760">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <rect x="9" y="9" width="13" height="13" rx="2" stroke-width="2"/>
-                            <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" stroke-width="2"/>
-                        </svg>
-                        Copy phone
-                    </button>
+
+                <div class="content-section" style="margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--surface-border);">
+                    <p style="font-size: 13px; color: var(--ink-soft);">Remote only • Based in Jamestown, NY</p>
                 </div>
-                <a href="./resume.pdf" target="_blank" rel="noopener noreferrer" class="download-button">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                    </svg>
-                    Download Resume
-                </a>
                 <span class="copy-toast" id="copyToast">Copied</span>
+            `;
+        }
+
+        function revealEmail(btn) {
+            const email = 'rob@robfiasco.dev';
+            const container = document.getElementById('emailContainer');
+            container.innerHTML = `
+                <div class="contact-links text-lg">${email}</div>
+                <button class="copy-button" onclick="copyText('${email}')">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <rect x="9" y="9" width="13" height="13" rx="2" stroke-width="2"/>
+                        <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" stroke-width="2"/>
+                    </svg>
+                    Copy email
+                </button>
             `;
         }
 
@@ -3415,13 +3577,8 @@ focus: AI-native product building</pre>
             return `
                 <div class="content-section">
                     <p style="color: var(--ink-soft); margin-bottom: 16px;">Build in Public — recent updates</p>
-                    <ul>
-                        <li><span class="bullet">•</span><span>Mar 2026 — Shipped a tighter desktop layout with mobile-first fallbacks.</span></li>
-                        <li><span class="bullet">•</span><span>Feb 2026 — Added hover descriptions and recruiter-friendly quick links.</span></li>
-                        <li><span class="bullet">•</span><span>Jan 2026 — Launched MicroLifts prototype with daily goal tracking.</span></li>
-                        <li><span class="bullet">•</span><span>Dec 2025 — Built CDIR automation pipeline for custom streaming.</span></li>
-                        <li><span class="bullet">•</span><span>Nov 2025 — Released LOTDQQ MVP with packs + scoring.</span></li>
-                        <li><span class="bullet">•</span><span>Oct 2025 — Set up analytics + diagnostics tooling for this OS.</span></li>
+                    <ul id="systemLogFeed">
+                        <!-- Content populated by githubUpdates.js -->
                     </ul>
                 </div>
                 <hr class="divider">
@@ -3590,8 +3747,8 @@ focus: AI-native product building</pre>
             };
             updateMobileClock();
 
-            const gridIds = ['about', 'resume', 'contact'];
-            const dockIds = ['lotdqq', 'cdir', 'resume', 'contact'];
+            const gridIds = ['about', 'contact'];
+            const dockIds = ['lotdqq', 'cdir', 'contact'];
 
             gridIds.forEach(id => {
                 const index = icons.findIndex(i => i.id === id);
@@ -3636,6 +3793,7 @@ focus: AI-native product building</pre>
         }
 
     </script>
+    <script src="assets/js/githubUpdates.js"></script>
 </body>
 
 </html>
