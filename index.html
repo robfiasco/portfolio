@@ -2341,6 +2341,7 @@
                 label: 'LOTDQQ',
                 type: 'external',
                 url: 'https://lotdqq.com',
+                mobileUrl: 'https://lotdqq.netlify.app',
                 previewUrl: 'https://lotdqq.com',
                 previewImg: './assets/previews/lotdqq.png',
                 icon: 'quiz',
@@ -4070,6 +4071,12 @@ focus: AI-native product building</pre>
 
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
+
+                if (icon.mobileUrl) {
+                    window.location.href = icon.mobileUrl;
+                    return;
+                }
+
                 btn.firstElementChild.style.transform = 'scale(0.92)';
                 setTimeout(() => btn.firstElementChild.style.transform = '', 150);
 
